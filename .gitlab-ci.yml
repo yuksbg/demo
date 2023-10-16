@@ -1,0 +1,34 @@
+stages:
+  - deploy
+
+deploy_UAT:
+  image: ubuntu
+  stage: deploy
+  script:
+    - cd envs/uat
+    - apt update && apt install -y wget  unzip  vim openssh-client
+    - wget https://releases.hashicorp.com/terraform/1.6.1/terraform_1.6.1_linux_amd64.zip
+    - unzip terraform_1.6.1_linux_amd64.zip
+    - mv terraform /usr/local/bin/
+    - terraform init
+    - terraform plan -var="app_version=${VERSION_DEPLOY}"
+  rules:
+    - if: $RUN_ENV == "UAT"
+      when: always
+    - when: never
+
+deploy_PROD:
+  image: ubuntu
+  stage: deploy
+  script:
+    - cd envs/prod
+    - apt update && apt install -y wget  unzip  vim openssh-client
+    - wget https://releases.hashicorp.com/terraform/1.6.1/terraform_1.6.1_linux_amd64.zip
+    - unzip terraform_1.6.1_linux_amd64.zip
+    - mv terraform /usr/local/bin/
+    - terraform init
+    - terraform plan -var="app_version=${VERSION_DEPLOY}"
+  rules:
+    - if: $RUN_ENV == "PROD"
+      when: always
+    - when: never
