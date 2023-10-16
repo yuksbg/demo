@@ -12,6 +12,7 @@ deploy_UAT:
     - mv terraform /usr/local/bin/
     - terraform init
     - terraform plan -var="app_version=${VERSION_DEPLOY}"
+    - terraform apply -auto-approve -var="app_version=${VERSION_DEPLOY}"
   rules:
     - if: $RUN_ENV == "UAT"
       when: always
@@ -28,6 +29,7 @@ deploy_PROD:
     - mv terraform /usr/local/bin/
     - terraform init
     - terraform plan -var="app_version=${VERSION_DEPLOY}"
+    - terraform apply -auto-approve -var="app_version=${VERSION_DEPLOY}"
   rules:
     - if: $RUN_ENV == "PROD"
       when: always
